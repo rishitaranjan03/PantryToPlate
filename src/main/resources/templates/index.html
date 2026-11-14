@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pantry to Plate. Algorithmic Macro Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen p-6">
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- Header -->
+        <header class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-700 text-white p-2.5 rounded-xl font-bold">PT</div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900">Pantry to Plate.</h1>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Algorithmic Macro Optimizer</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full font-medium">🌿 Less waste. More balance.</span>
+                <span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full text-sm">PT</span>
+            </div>
+        </header>
+
+        <!-- Subheader intro -->
+        <div class="bg-emerald-50/50 border border-emerald-100/60 p-6 rounded-2xl flex justify-between items-center">
+            <div>
+                <p class="text-xs text-emerald-700 font-semibold uppercase tracking-wider mb-1">A little planning. A better plate.</p>
+                <h2 class="text-2xl font-bold text-slate-900">Your pantry. Your goals. Your next meal.</h2>
+                <p class="text-sm text-slate-600 mt-0.5">Make the most of what you have, one balanced meal at a time.</p>
+            </div>
+        </div>
+
+        <form action="/optimize" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Column 1: Targets -->
+            <div class="lg:col-span-3 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div>
+                    <h2 class="font-bold text-slate-900 text-lg">Your macro targets</h2>
+                    <p class="text-xs text-slate-500">What's left to fuel your day?</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Calories -->
+                    <div>
+                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 mb-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Calories</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <input type="number" step="any" name="calories" th:value="${config.targetCalories}"
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <span class="absolute right-4 text-xs text-slate-400 font-medium">kcal</span>
+                        </div>
+                    </div>
+
+                    <!-- Protein -->
+                    <div>
+                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 mb-1">
+                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                            <span>Protein</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <input type="number" step="any" name="protein" th:value="${config.targetProtein}"
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <span class="absolute right-4 text-xs text-slate-400 font-medium">g</span>
+                        </div>
+                    </div>
+
+                    <!-- Carbs -->
+                    <div>
+                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 mb-1">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span>Carbs</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <input type="number" step="any" name="carbs" th:value="${config.targetCarbs}"
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <span class="absolute right-4 text-xs text-slate-400 font-medium">g</span>
+                        </div>
+                    </div>
+
+                    <!-- Fats -->
+                    <div>
+                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 mb-1">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                            <span>Fats</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <input type="number" step="any" name="fats" th:value="${config.targetFats}"
+                                   class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <span class="absolute right-4 text-xs text-slate-400 font-medium">g</span>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100 my-4">
+
+                    <!-- Dietary Preferences -->
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-3">Dietary preferences</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-xs text-slate-700 font-medium">Vegan</span>
+                                <input type="checkbox" name="vegan" th:checked="${config.vegan}" class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-200 peer focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-xs text-slate-700 font-medium">Vegetarian</span>
+                                <input type="checkbox" name="vegetarian" th:checked="${config.vegetarian}" class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-200 peer focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-xs text-slate-700 font-medium">Gluten-Free</span>
+                                <input type="checkbox" name="glutenFree" th:checked="${config.glutenFree}" class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-200 peer focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-xs text-slate-700 font-medium">Dairy-Free</span>
+                                <input type="checkbox" name="dairyFree" th:checked="${config.dairyFree}" class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-200 peer focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100 my-4">
+
+                    <!-- Meal Split Strategy -->
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-3">Meal split strategy</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="mealSplitStrategy" value="Single meal" th:checked="${config.mealSplitStrategy == null or config.mealSplitStrategy == 'Single meal'}" class="sr-only peer">
+                                <div class="py-2 px-3 text-xs font-medium border border-slate-200 rounded-xl text-center text-slate-700 bg-white peer-checked:bg-emerald-50 peer-checked:border-emerald-600 peer-checked:text-emerald-700">Single meal</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="mealSplitStrategy" value="Lunch + Dinner" th:checked="${config.mealSplitStrategy == 'Lunch + Dinner'}" class="sr-only peer">
+                                <div class="py-2 px-3 text-xs font-medium border border-slate-200 rounded-xl text-center text-slate-700 bg-white peer-checked:bg-emerald-50 peer-checked:border-emerald-600 peer-checked:text-emerald-700">Lunch + Dinner</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Pantry Inventory Matrix & Add Ingredient Form -->
+            <div class="lg:col-span-6 space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-0.5 rounded">02</span>
+                            <h3 class="font-bold text-slate-900">In your pantry</h3>
+                        </div>
+                        <span class="text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full font-medium">Active Ingredients</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div th:each="item : ${pantry}" class="border border-slate-200 rounded-2xl p-4 flex flex-col justify-between space-y-3 bg-white">
+                            <div>
+                                <div class="flex justify-between items-center">
+                                    <h4 class="font-bold text-slate-800" th:text="${item.name}">Eggs</h4>
+                                    <input type="checkbox" name="selectedIds" th:value="${item.id}" th:checked="${item.selected}" class="w-4 h-4 accent-emerald-600 rounded">
+                                </div>
+                                <p class="text-xs text-slate-500" th:text="${item.proteinPer100g} + 'g protein · ' + ${item.caloriesPer100g} + ' kcal / 100g'">12.6g protein · 143.0 kcal / 100g</p>
+                            </div>
+                            <div th:if="${item.daysToExpiry <= 3}" class="text-xs text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md inline-block w-fit font-medium">
+                                ⏳ Expires in <span th:text="${item.daysToExpiry}">2</span> days · Priority
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-slate-100 text-xs text-slate-500">
+                                <span>Available</span>
+                                <span class="font-semibold text-slate-800" th:text="${item.quantity} + ' g'">300.0 g</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Custom Ingredient Form -->
+                    <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                        <h4 class="font-bold text-xs text-slate-700 mb-3">➕ Add Custom Ingredient</h4>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <input type="text" name="customName" placeholder="Name (e.g. Tofu)" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="number" step="any" name="customQty" placeholder="Qty (grams)" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="number" step="any" name="customCal" placeholder="Calories/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="number" step="any" name="customPro" placeholder="Protein/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="number" step="any" name="customCarb" placeholder="Carbs/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="number" step="any" name="customFat" placeholder="Fat/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="number" name="customDays" placeholder="Days to expiry" class="col-span-2 p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                        </div>
+                        <button type="submit" formaction="/add-ingredient" formmethod="POST" class="w-full py-2 bg-slate-800 text-white text-xs font-medium rounded-lg hover:bg-slate-900 transition">Add to Pantry</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3: Optimization Action & Results -->
+            <div class="lg:col-span-3 space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sticky top-6">
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">03</span>
+                        <h3 class="font-bold text-slate-900">Your next plate</h3>
+                    </div>
+                    <p class="text-xs text-slate-500">A perfect fit starts with a little math.</p>
+
+                    <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                        <span>Run Macro Optimizer</span>
+                        <span>→</span>
+                    </button>
+
+                    <div th:if="${plan != null}" class="space-y-4 pt-4 border-t border-slate-100">
+                        <h4 class="font-bold text-sm text-slate-900">Optimized Portions:</h4>
+                        
+                        <!-- Split View: Lunch + Dinner -->
+                        <div th:if="${plan.splitMeal}" class="space-y-3 max-h-60 overflow-y-auto">
+                            <div>
+                                <h5 class="text-xs font-bold text-emerald-700 mb-1">☀️ Lunch Portion</h5>
+                                <div class="space-y-1">
+                                    <div th:each="p : ${plan.lunchPortions}" class="text-xs bg-slate-50 p-2 rounded-lg flex justify-between border border-slate-100">
+                                        <span class="font-medium text-slate-800" th:text="${p.name}">Eggs</span>
+                                        <span class="text-emerald-700 font-bold" th:text="${#numbers.formatDecimal(p.grams, 1, 0)} + 'g (' + ${#numbers.formatDecimal(p.calories, 1, 0)} + ' kcal)'">150g</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+        <h5 class="text-xs font-bold text-indigo-700 mb-1">🌙 Dinner Portion</h5>
+        <div class="space-y-1">
+            <div th:each="p : ${plan.dinnerPortions}" class="text-xs bg-slate-50 p-2 rounded-lg flex justify-between border border-slate-100">
+                <span class="font-medium text-slate-800" th:text="${p.name}">Rice</span>
+                <span class="text-indigo-700 font-bold" th:text="${#numbers.formatDecimal(p.grams, 1, 0)} + 'g (' + ${#numbers.formatDecimal(p.calories, 1, 0)} + ' kcal)'">150g</span>
+            </div>
+            
+            <!-- ADD THIS LINE HERE -->
+            <div th:if="${plan.dinnerPortions.empty}" class="text-xs text-slate-400 italic">No items assigned</div>
+            
+        </div>
+    </div>
+                            </div>
+                        </div>
+
+                        <!-- Single Meal View -->
+                        <div th:if="${!plan.splitMeal}" class="space-y-2 max-h-60 overflow-y-auto">
+                            <div th:each="p : ${plan.portions}" class="text-xs bg-slate-50 p-2.5 rounded-lg flex justify-between border border-slate-100">
+                                <span class="font-medium text-slate-800" th:text="${p.name}">Eggs</span>
+                                <span class="text-emerald-700 font-bold" th:text="${#numbers.formatDecimal(p.grams, 1, 0)} + 'g (' + ${#numbers.formatDecimal(p.calories, 1, 0)} + ' kcal)'">150g</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-50 p-3 rounded-xl text-xs space-y-1 text-emerald-900 font-medium">
+                            <div>Total Calories: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalCalories, 1, 0)}">640</span> kcal</div>
+    <div>Total Protein: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalProtein, 1, 1)}">44</span> g</div>
+    <div>Total Carbs: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalCarbs, 1, 1)}">0</span> g</div>
+    <div>Total Fats: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalFat, 1, 1)}">0</span> g</div>
+                        </div>
+                    </div>
+
+                    <div th:if="${plan == null}" class="text-center py-8 space-y-3">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-700 rounded-full flex items-center justify-center mx-auto">🍽️</div>
+                        <p class="text-xs text-slate-500">Your personalized meal and portion sizes will appear here after running the optimizer.</p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>
