@@ -32,7 +32,8 @@
             </div>
         </div>
 
-        <form action="/optimize" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- MAIN OPTIMIZER FORM -->
+        <form id="optimizeForm" action="/optimize" method="POST" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             <!-- Column 1: Targets -->
             <div class="lg:col-span-3 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
@@ -158,7 +159,8 @@
                             <div>
                                 <div class="flex justify-between items-center">
                                     <h4 class="font-bold text-slate-800" th:text="${item.name}">Eggs</h4>
-                                    <input type="checkbox" name="selectedIds" th:value="${item.id}" th:checked="${item.selected}" class="w-4 h-4 accent-emerald-600 rounded">
+                                    <!-- Tied checkboxes to optimizeForm -->
+                                    <input type="checkbox" name="selectedIds" th:value="${item.id}" th:checked="${item.selected}" form="optimizeForm" class="w-4 h-4 accent-emerald-600 rounded">
                                 </div>
                                 <p class="text-xs text-slate-500" th:text="${item.proteinPer100g} + 'g protein · ' + ${item.caloriesPer100g} + ' kcal / 100g'">12.6g protein · 143.0 kcal / 100g</p>
                             </div>
@@ -172,19 +174,19 @@
                         </div>
                     </div>
 
-                    <!-- Add Custom Ingredient Form -->
+                    <!-- Add Custom Ingredient Form Wrapper -->
                     <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
                         <h4 class="font-bold text-xs text-slate-700 mb-3">➕ Add Custom Ingredient</h4>
                         <div class="grid grid-cols-2 gap-2 mb-3">
-                            <input type="text" name="customName" placeholder="Name (e.g. Tofu)" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
-                            <input type="number" step="any" name="customQty" placeholder="Qty (grams)" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
-                            <input type="number" step="any" name="customCal" placeholder="Calories/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
-                            <input type="number" step="any" name="customPro" placeholder="Protein/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
-                            <input type="number" step="any" name="customCarb" placeholder="Carbs/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
-                            <input type="number" step="any" name="customFat" placeholder="Fat/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
-                            <input type="number" name="customDays" placeholder="Days to expiry" class="col-span-2 p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm">
+                            <input type="text" name="name" placeholder="Name (e.g. Tofu)" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <input type="number" step="any" name="quantity" placeholder="Qty (grams)" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <input type="number" step="any" name="caloriesPer100g" placeholder="Calories/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <input type="number" step="any" name="proteinPer100g" placeholder="Protein/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <input type="number" step="any" name="carbsPer100g" placeholder="Carbs/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <input type="number" step="any" name="fatPer100g" placeholder="Fat/100g" class="p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <input type="number" name="daysToExpiry" placeholder="Days to expiry" class="col-span-2 p-2 text-xs border border-slate-200 rounded-lg bg-white" form="addIngredientForm" required>
+                            <button type="submit" form="addIngredientForm" class="col-span-2 py-2 bg-slate-800 text-white text-xs font-medium rounded-lg hover:bg-slate-900 transition">Add to Pantry</button>
                         </div>
-                        <button type="submit" formaction="/add-ingredient" formmethod="POST" class="w-full py-2 bg-slate-800 text-white text-xs font-medium rounded-lg hover:bg-slate-900 transition">Add to Pantry</button>
                     </div>
                 </div>
             </div>
@@ -198,7 +200,8 @@
                     </div>
                     <p class="text-xs text-slate-500">A perfect fit starts with a little math.</p>
 
-                    <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                    <!-- Optimizer Submit Button -->
+                    <button type="submit" form="optimizeForm" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2">
                         <span>Run Macro Optimizer</span>
                         <span>→</span>
                     </button>
@@ -218,18 +221,14 @@
                                 </div>
                             </div>
                             <div class="pt-2">
-        <h5 class="text-xs font-bold text-indigo-700 mb-1">🌙 Dinner Portion</h5>
-        <div class="space-y-1">
-            <div th:each="p : ${plan.dinnerPortions}" class="text-xs bg-slate-50 p-2 rounded-lg flex justify-between border border-slate-100">
-                <span class="font-medium text-slate-800" th:text="${p.name}">Rice</span>
-                <span class="text-indigo-700 font-bold" th:text="${#numbers.formatDecimal(p.grams, 1, 0)} + 'g (' + ${#numbers.formatDecimal(p.calories, 1, 0)} + ' kcal)'">150g</span>
-            </div>
-            
-            <!-- ADD THIS LINE HERE -->
-            <div th:if="${plan.dinnerPortions.empty}" class="text-xs text-slate-400 italic">No items assigned</div>
-            
-        </div>
-    </div>
+                                <h5 class="text-xs font-bold text-indigo-700 mb-1">🌙 Dinner Portion</h5>
+                                <div class="space-y-1">
+                                    <div th:each="p : ${plan.dinnerPortions}" class="text-xs bg-slate-50 p-2 rounded-lg flex justify-between border border-slate-100">
+                                        <span class="font-medium text-slate-800" th:text="${p.name}">Rice</span>
+                                        <span class="text-indigo-700 font-bold" th:text="${#numbers.formatDecimal(p.grams, 1, 0)} + 'g (' + ${#numbers.formatDecimal(p.calories, 1, 0)} + ' kcal)'">150g</span>
+                                    </div>
+                                    <div th:if="${plan.dinnerPortions.empty}" class="text-xs text-slate-400 italic">No items assigned</div>
+                                </div>
                             </div>
                         </div>
 
@@ -243,9 +242,9 @@
 
                         <div class="bg-emerald-50 p-3 rounded-xl text-xs space-y-1 text-emerald-900 font-medium">
                             <div>Total Calories: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalCalories, 1, 0)}">640</span> kcal</div>
-    <div>Total Protein: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalProtein, 1, 1)}">44</span> g</div>
-    <div>Total Carbs: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalCarbs, 1, 1)}">0</span> g</div>
-    <div>Total Fats: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalFat, 1, 1)}">0</span> g</div>
+                            <div>Total Protein: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalProtein, 1, 1)}">44</span> g</div>
+                            <div>Total Carbs: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalCarbs, 1, 1)}">0</span> g</div>
+                            <div>Total Fats: <span class="font-bold" th:text="${#numbers.formatDecimal(plan.totalFat, 1, 1)}">0</span> g</div>
                         </div>
                     </div>
 
@@ -257,6 +256,10 @@
             </div>
 
         </form>
+
+        <!-- SEPARATE ADD INGREDIENT FORM ELEMENT -->
+        <form id="addIngredientForm" action="/add-ingredient" method="POST"></form>
+
     </div>
 </body>
 </html>
